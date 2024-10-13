@@ -14,8 +14,8 @@ app.use(express.static('public'));
 // This line uses the router from shipmentController
 app.use('/api/shipments', shipmentController); 
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(3000, '0.0.0.0', function() {
+  console.log("Server is listening on port 3000 and accessible publicly");
 });
 
 // Sync Sequelize models to the database
