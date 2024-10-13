@@ -15,7 +15,7 @@ app.use(express.static('public'));
 app.use('/api/shipments', shipmentController); 
 
 app.listen(3000, '0.0.0.0', function() {
-  console.log("Server is listening on port 3000 and accessible publicly");
+  console.log("Server is listening on port 80 and accessible publicly");
 });
 
 // Sync Sequelize models to the database
