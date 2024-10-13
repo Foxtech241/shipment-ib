@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Shipment Tracking - FedEx Style</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="/image/log-fedex.JPG" alt="FedEx Logo">
+            </div>
+            <nav>
+                <ul>
+                    <b>Fedex Partner tracking system, for FEDEX partner carriar</b>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Welcome to the Shipment Tracking System</h1>
+            <p>Track your shipment easily and efficiently.</p>
+            
+            <!-- Additional image added here -->
+            <img class="tracking-image" src="/image/fedex1.png" alt="Shipping Image">
+
+            <form id="tracking-form">
+                <input type="text" id="tracking-number" placeholder="Enter Tracking Number" required>
+                <button type="submit">Track</button>
+            </form>
+
+            <div id="shipment-details" class="hidden">
+                <h2>Shipment Details</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Shipment Owner</th>
+                            <th>Sender Name</th>
+                            <th>Send From</th>
+                            <th>Destination</th>
+                            <th>Status</th>
+                            <th>Weight</th>
+                            <th>Shipping Price</th>
+                            <th>Receiver Name</th>
+                            <th>Receiver Address</th>
+                            <th>Method of Shipping</th>
+                            <th>Pickup Airport</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shipment-info">
+                        <!-- Shipment details will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 FEDEX partenerd Tracking System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
