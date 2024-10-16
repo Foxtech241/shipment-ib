@@ -8,15 +8,26 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Check if Supabase is correctly initialized
+if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Supabase client not initialized correctly.');
+    throw new Error('Supabase client initialization failed.');
+}
+
 // POST route for creating a shipment
 router.post('/', async (req, res) => {
     try {
+        console.log('Request body:', req.body); // Log the incoming request data
+        
         // Insert shipment data into the Supabase 'shipments' table
         const { data, error } = await supabase
             .from('shipments') // Replace 'shipments' with your Supabase table name
             .insert([req.body]);
 
-        if (error) throw error;
+        if (error) {
+            console.error('Supabase insert error:', error); // Log error details
+            return res.status(500).json({ success: false, message: error.message });
+        }
 
         res.json({ success: true, shipment: data });
     } catch (error) {
@@ -33,7 +44,10 @@ router.get('/', async (req, res) => {
             .from('shipments') // Replace 'shipments' with your Supabase table name
             .select('*');
 
-        if (error) throw error;
+        if (error) {
+            console.error('Supabase fetch error:', error); // Log error details
+            return res.status(500).json({ success: false, message: error.message });
+        }
 
         res.status(200).json(data);
     } catch (error) {
@@ -42,5 +56,4 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Export the router
 module.exports = router;
