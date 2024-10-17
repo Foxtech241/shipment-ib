@@ -19,7 +19,7 @@ class Shipment extends Model {
     }
 
     // Static method to generate tracking number
-    static generateTrackingNumber() {
+    static generatetrackingnumber() {
         const timestamp = Date.now().toString();
         const randomNum = Math.floor(Math.random() * 100000);
         return `TRK${timestamp}${randomNum}`;
@@ -32,7 +32,7 @@ Shipment.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    trackingNumber: {
+    trackingnumber: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true, // Ensure tracking number is unique
@@ -83,7 +83,7 @@ Shipment.init({
     modelName: 'Shipment',
     hooks: {
         beforeCreate: (shipment) => {
-            shipment.trackingNumber = Shipment.generateTrackingNumber();
+            shipment.trackingnumber = Shipment.generatetrackingnumber();
         }
     }
 });

@@ -3,7 +3,7 @@ document.getElementById('addShipmentForm').addEventListener('submit', function(e
   
     // Collect form data
     const shipmentData = {
-      trackingNumber: document.getElementById('trackingNumber').value,
+      trackingnumber: document.getElementById('trackingnumber').value,
       shipmentOwner: document.getElementById('shipmentOwner').value,
       senderName: document.getElementById('senderName').value,
       sendFrom: document.getElementById('sendFrom').value,

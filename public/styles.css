@@ -107,6 +107,14 @@ th {
     background-color: #f2f2f2;
 }
 
+tbody tr td {
+    color: skyblue; /* Set text color for table data */
+}
+
+tbody tr th {
+    color: #4b4e7c; /* Set text color for table headers */
+}
+
 footer {
     text-align: center;
     padding: 10px 0;

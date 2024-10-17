@@ -13,7 +13,7 @@ router.post('/api/shipments', async (req, res) => {
     try {
       // Extract data from request body
       const {
-        trackingNumber,
+        trackingnumber,
         shipmentOwner,
         senderName,
         sendFrom,
@@ -29,7 +29,7 @@ router.post('/api/shipments', async (req, res) => {
       } = req.body;
   
       // Basic validation: ensure required fields are not empty
-      if (!trackingNumber || !shipmentOwner || !senderName || !sendFrom || !destination || !weight || !shippingPrice || !receiverName || !receiverAddress || !methodOfShipping || !pickupAirport) {
+      if (!trackingnumber || !shipmentOwner || !senderName || !sendFrom || !destination || !weight || !shippingPrice || !receiverName || !receiverAddress || !methodOfShipping || !pickupAirport) {
         return res.status(400).json({ success: false, message: 'Missing required fields.' });
       }
   
@@ -37,7 +37,7 @@ router.post('/api/shipments', async (req, res) => {
       const { data, error } = await supabase
         .from('shipments')  // Ensure the table name matches your database
         .insert([{
-          trackingNumber: trackingNumber,
+          trackingnumber: trackingnumber,
           shipment_owner: shipmentOwner,
           sender_name: senderName,
           send_from: sendFrom,
@@ -115,13 +115,13 @@ router.get('/', async (req, res) => {
 });
 
 // Route to fetch shipment details by tracking number
-router.get('/api/shipments/:trackingNumber', async (req, res) => {
-    const trackingNumber = req.params.trackingNumber;
+router.get('/api/shipments/:trackingnumber', async (req, res) => {
+    const trackingnumber = req.params.trackingnumber;
 
     const { data, error } = await supabase
         .from('shipments')
         .select('*')
-        .eq('trackingNumber', trackingNumber);
+        .eq('trackingnumber', trackingnumber);
 
     if (error || data.length === 0) {
         return res.json({ success: false, message: 'Shipment not found' });
@@ -131,15 +131,15 @@ router.get('/api/shipments/:trackingNumber', async (req, res) => {
 });
 
 // Define the function to get shipment details by tracking number
-async function getShipmentByTrackingNumber(req, res) {
-    const { trackingNumber } = req.params; // Extract tracking number from the URL parameters
+async function getShipmentBytrackingnumber(req, res) {
+    const { trackingnumber } = req.params; // Extract tracking number from the URL parameters
 
     try {
         // Query the Supabase database for the shipment using the tracking number
         const { data: shipment, error } = await supabase
             .from('shipments')
             .select('*')
-            .eq('trackingNumber', trackingNumber)
+            .eq('trackingnumber', trackingnumber)
             .single(); // Retrieve a single record
 
         if (error) {
@@ -159,7 +159,7 @@ async function getShipmentByTrackingNumber(req, res) {
 
 // Export the function correctly
 module.exports = {
-    getShipmentByTrackingNumber,
+    getShipmentBytrackingnumber,
 };
 
 module.exports = router;

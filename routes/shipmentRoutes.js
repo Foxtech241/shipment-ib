@@ -2,19 +2,19 @@ const express = require('express');
 const supabase = require('../supabaseClient'); // Adjust path accordingly
 const router = express.Router();
 
-// Define the getShipmentByTrackingNumber function
-const getShipmentByTrackingNumber = async (req, res) => {
-    const trackingNumber = req.params.trackingNumber;
+// Define the getShipmentBytrackingnumber function
+const getShipmentBytrackingnumber = async (req, res) => {
+    const trackingnumber = req.params.trackingnumber;
 
     // Log the tracking number for debugging
-    console.log('Tracking number received from frontend:', trackingNumber);
+    console.log('Tracking number received from frontend:', trackingnumber);
 
     try {
         // Query Supabase for shipment details
         const { data, error, count } = await supabase
             .from('shipments')
             .select('*')
-            .eq('trackingNumber', trackingNumber)
+            .eq('trackingnumber', trackingnumber)
             .limit(1)  // Ensure that only one row is fetched
             .single();
 
@@ -24,7 +24,7 @@ const getShipmentByTrackingNumber = async (req, res) => {
         }
 
         if (!data) {
-            console.log('No shipment data found for tracking number:', trackingNumber);
+            console.log('No shipment data found for tracking number:', trackingnumber);
             return res.status(404).json({ success: false, message: 'Shipment not found' });
         }
 
@@ -37,7 +37,9 @@ const getShipmentByTrackingNumber = async (req, res) => {
 };
 
 // Add route to get shipment by tracking number
-router.get('/:trackingNumber', getShipmentByTrackingNumber);
+router.get('/:trackingnumber', getShipmentBytrackingnumber);
+
+
 
 // Export the router
 module.exports = router;

@@ -2,8 +2,8 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const tableInfo = await queryInterface.describeTable('Shipments');
     
-    if (!tableInfo.trackingNumber) {
-      await queryInterface.addColumn('Shipments', 'trackingNumber', {
+    if (!tableInfo.trackingnumber) {
+      await queryInterface.addColumn('Shipments', 'trackingnumber', {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
@@ -25,7 +25,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Shipments', 'trackingNumber');
+    await queryInterface.removeColumn('Shipments', 'trackingnumber');
     await queryInterface.removeColumn('Shipments', 'shipmentOwner');
     await queryInterface.removeColumn('Shipments', 'senderName');
     // Repeat for the rest of the columns

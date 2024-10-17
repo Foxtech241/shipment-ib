@@ -22,18 +22,31 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.static('public'));
+
+// Ignore any requests for .map files
+app.get('*.map', (req, res) => {
+    res.status(204).send(); // Send "No Content" response for .map files
+});
+
+
+app.use('/api/shipments', shipmentController); 
+app.get('/track/:trackingnumber', (req, res) => {
+    const trackingnumber = req.params.trackingnumber; // Retrieve trackingnumber from request
+    res.send(`Tracking Number: ${trackingnumber}`); // Respond with the tracking number
+});
+app.use((req, res, next) => {
+    console.log('Incoming request:', req.method, req.url);
+    next();
+});
 
 // Use the shipment routes
 app.use(shipmentRoutes);
 
-app.use('/api/shipments', shipmentController); 
-app.get('/track/:trackingNumber', (req, res) => {
-    const trackingNumber = req.params.trackingNumber; // Retrieve trackingNumber from request
-    res.send(`Tracking Number: ${trackingNumber}`); // Respond with the tracking number
-});
-
+app.use('/api/shipments', shipmentRoutes);  
 
 
 // Start the server
