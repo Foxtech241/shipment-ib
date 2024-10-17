@@ -1,17 +1,28 @@
 document.getElementById('tracking-form').addEventListener('submit', function(e) {
   e.preventDefault();  // Prevent the form from reloading the page
 
-  const trackingNumber = document.getElementById('tracking-number').value;  // Get the input value
+  const trackingNumber = document.getElementById('tracking-number').value.trim();  // Get and trim input
+
+  // Check if tracking number is valid
+  if (!trackingNumber || trackingNumber.length === 0) {
+      alert('Please enter a valid tracking number');
+      return;
+  }
 
   // Send a request to your backend to fetch shipment details based on the tracking number
   fetch(`/api/shipments/${trackingNumber}`)
-      .then(response => response.json())
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+      })
       .then(data => {
-          console.log(data); // Log the response data for debugging
           if (data.success) {
-              const shipment = data.data; // Change this line
+              const shipment = data.data;
               const shipmentInfo = `
                   <tr>
+                      <td>${shipment.trackingNumber}</td>
                       <td>${shipment.shipmentOwner}</td>
                       <td>${shipment.senderName}</td>
                       <td>${shipment.sendFrom}</td>
@@ -32,7 +43,7 @@ document.getElementById('tracking-form').addEventListener('submit', function(e) 
           }
       })
       .catch(error => {
-          console.error('Error:', error);
-          alert('Error fetching shipment details');
+          console.error('Error fetching shipment details:', error);
+          alert(`Error fetching shipment details: ${error.message}`);
       });
 });
