@@ -1,8 +1,8 @@
 document.getElementById('addShipmentForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  // Collect form data
-  const shipmentData = {
+    e.preventDefault();
+  
+    // Collect form data
+    const shipmentData = {
       trackingNumber: document.getElementById('trackingNumber').value,
       shipmentOwner: document.getElementById('shipmentOwner').value,
       senderName: document.getElementById('senderName').value,
@@ -15,29 +15,31 @@ document.getElementById('addShipmentForm').addEventListener('submit', function(e
       receiverAddress: document.getElementById('receiverAddress').value,
       methodOfShipping: document.getElementById('methodOfShipping').value,
       pickupAirport: document.getElementById('pickupAirport').value,
-      timeGoodsLeftCompany: document.getElementById('timeGoodsLeftCompany').value || null, // Optional field
-  };
-
-  // Send POST request to the server
-  fetch('/api/shipments', {
+      timeGoodsLeftCompany: document.getElementById('timeGoodsLeftCompany').value || null
+    };
+  
+    console.log(shipmentData); // Check if the data is properly collected
+  
+    // Send POST request to the server
+    fetch('/api/shipments', {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(shipmentData),
-  })
-  .then(response => response.json())
-  .then(data => {
+    })
+    .then(response => response.json())
+    .then(data => {
       if (data.success) {
-          alert('Shipment added successfully!');
-          // Optionally, reset the form or reload shipments
-          document.getElementById('addShipmentForm').reset();
+        alert('Shipment added successfully!');
+        document.getElementById('addShipmentForm').reset();
       } else {
-          alert('Error: ' + data.message);
+        alert('Error: ' + data.message);
       }
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error:', error);
       alert('An error occurred while adding the shipment.');
+    });
   });
-});
+  

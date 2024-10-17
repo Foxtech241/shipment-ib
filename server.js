@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const shipmentController = require('./controllers/shipmentController'); 
+const shipmentRoutes = require('./routes/shipmentRoutes'); // Adjust to your file structure
+
 
 // Import the Supabase client
 const { createClient } = require('@supabase/supabase-js');
@@ -23,7 +25,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+// Use the shipment routes
+app.use(shipmentRoutes);
+
 app.use('/api/shipments', shipmentController); 
+app.get('/track/:trackingNumber', (req, res) => {
+    const trackingNumber = req.params.trackingNumber; // Retrieve trackingNumber from request
+    res.send(`Tracking Number: ${trackingNumber}`); // Respond with the tracking number
+});
+
+
 
 // Start the server
 app.listen(PORT, '0.0.0.0', function() {
