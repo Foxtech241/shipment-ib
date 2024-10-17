@@ -5,6 +5,7 @@ const shipmentController = require('./controllers/shipmentController');
 const shipmentRoutes = require('./routes/shipmentRoutes'); // Adjust to your file structure
 
 
+
 // Import the Supabase client
 const { createClient } = require('@supabase/supabase-js');
 
