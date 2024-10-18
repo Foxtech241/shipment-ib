@@ -3,8 +3,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const shipmentController = require('./controllers/shipmentController'); 
 const shipmentRoutes = require('./routes/shipmentRoutes'); // Adjust to your file structure
+const cors = require('cors');
 
 
+// Enable CORS for all routes (you can restrict it to certain domains)
+app.use(cors());
+
+// Restrict CORS to specific domain (e.g., your frontend domain on Vercel)
+app.use(cors({
+  origin: 'https://shipment-fedex.vercel.app'
+}));
 
 // Import the Supabase client
 const { createClient } = require('@supabase/supabase-js');
