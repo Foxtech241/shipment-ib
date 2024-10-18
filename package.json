@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "Shipment Tracking System",
     "main": "server.js",
+    "type": "module",    
     "scripts": {
         "start": "node server.js"
     },
@@ -23,3 +24,4 @@
         "sequelize-cli": "^6.6.2"
     }
 }
+
