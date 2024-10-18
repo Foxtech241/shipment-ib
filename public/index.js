@@ -11,7 +11,7 @@ document.getElementById('tracking-form').addEventListener('submit', function(e) 
       return;
   }
 
-  fetch(`/api/shipments/${trackingNumber}`)
+  fetch(`/api/shipments/${trackingnumber}`)
   .then(response => {
           if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
