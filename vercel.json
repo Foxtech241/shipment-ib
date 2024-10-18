@@ -1,6 +1,6 @@
 {
-    "builds": [
-      { "src": "server.js", "use": "@vercel/node" }
+    "rewrites": [
+      { "source": "/api/shipments/:trackingnumber", "destination": "/routes/shipmentRoutes.js" }
     ]
   }
   
