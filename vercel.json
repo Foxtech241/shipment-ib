@@ -1,6 +1,9 @@
 {
-    "rewrites": [
-      { "source": "/api/shipments/:trackingnumber", "destination": "/api/shipments" }
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "/api/$1"
+      }
     ]
   }
   
