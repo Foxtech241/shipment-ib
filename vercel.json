@@ -2,7 +2,7 @@
     "rewrites": [
       {
         "source": "/api/shipments/:trackingnumber",
-        "destination": "/routes/shipmentRoutes" 
+        "destination": "/api/shipmentRoutes" 
       }
     ]
   }

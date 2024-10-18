@@ -43,8 +43,7 @@ app.get('*.map', (req, res) => {
 
 
 app.get('/api/shipments/:trackingnumber', async (req, res) => {
-    const { trackingnumber } = req.params;
-    // Your logic here to fetch the shipment details
+    const { trackingnumber } = req.params;      // Your logic here to fetch the shipment details
 });
 
 app.use('/api/shipments', shipmentController); 
