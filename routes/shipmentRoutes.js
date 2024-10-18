@@ -1,6 +1,8 @@
 const express = require('express');
 const supabase = require('../supabaseClient'); // Adjust path accordingly
 const router = express.Router();
+const shipment = await findShipmentByTrackingNumber(trackingnumber);
+
 
 // Define the getShipmentBytrackingnumber function
 const getShipmentBytrackingnumber = async (req, res) => {
