@@ -42,6 +42,11 @@ app.get('*.map', (req, res) => {
 });
 
 
+app.get('/api/shipments/:trackingnumber', async (req, res) => {
+    const { trackingnumber } = req.params;
+    // Your logic here to fetch the shipment details
+});
+
 app.use('/api/shipments', shipmentController); 
 app.get('/track/:trackingnumber', (req, res) => {
     const trackingnumber = req.params.trackingnumber; // Retrieve trackingnumber from request
@@ -50,10 +55,6 @@ app.get('/track/:trackingnumber', (req, res) => {
 app.use((req, res, next) => {
     console.log('Incoming request:', req.method, req.url);
     next();
-});
-app.get('/api/shipments/:trackingnumber', async (req, res) => {
-    const { trackingnumber } = req.params;
-    // Your logic here to fetch the shipment details
 });
 
 
