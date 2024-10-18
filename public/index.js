@@ -11,8 +11,8 @@ document.getElementById('tracking-form').addEventListener('submit', function(e) 
       return;
   }
 
-  fetch(`https://shipment-fedex.vercel.app/api/shipments/${trackingnumber}`)
-    .then(response => {
+  fetch(`/api/shipments/${trackingNumber}`)
+  .then(response => {
           if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
           }

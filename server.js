@@ -4,7 +4,10 @@ const bodyParser = require('body-parser');
 const shipmentController = require('./controllers/shipmentController'); 
 const shipmentRoutes = require('./routes/shipmentRoutes'); // Adjust to your file structure
 const cors = require('cors');
-
+// Initialize Supabase with your environment variables
+const supabaseUrl = process.env.SUPABASE_URL || 'your-supabase-url';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'your-anon-key';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Enable CORS for all routes (you can restrict it to certain domains)
 app.use(cors());
@@ -17,10 +20,7 @@ app.use(cors({
 // Import the Supabase client
 const { createClient } = require('@supabase/supabase-js');
 
-// Initialize Supabase with your environment variables
-const supabaseUrl = process.env.SUPABASE_URL || 'your-supabase-url';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'your-anon-key';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
 
 if (!supabaseUrl || !supabaseAnonKey) {
     console.error('Supabase URL or Anon Key is missing. Check your environment variables.');
@@ -51,6 +51,11 @@ app.use((req, res, next) => {
     console.log('Incoming request:', req.method, req.url);
     next();
 });
+app.get('/api/shipments/:trackingnumber', async (req, res) => {
+    const { trackingnumber } = req.params;
+    // Your logic here to fetch the shipment details
+});
+
 
 // Use the shipment routes
 app.use(shipmentRoutes);
