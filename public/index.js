@@ -2,9 +2,7 @@ document.getElementById('tracking-form').addEventListener('submit', function(e) 
   e.preventDefault();  // Prevent the form from reloading the page
 
   const trackingnumber = document.getElementById('trackingnumber').value;
-  // Get the input value
-
-  console.log('Tracking number sent to  backend:', trackingnumber);  // Debug log
+  console.log('Tracking number sent to backend:', trackingnumber);  // Debug log
 
   if (!trackingnumber) {
       alert('Please enter a valid tracking number');
@@ -20,8 +18,8 @@ document.getElementById('tracking-form').addEventListener('submit', function(e) 
       })
       .then(data => {
           console.log(data);  // Log the response data for debugging
-          if (data.success) {
-              const shipment = data.data;
+          if (data) {  // Check if the data exists
+              const shipment = data;
               const shipmentInfo = `
                   <tr>
                       <td>${shipment.trackingnumber}</td>
