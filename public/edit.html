@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Shipment</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <h1>Edit Shipment</h1>
+    <form id="edit-shipment-form">
+        <label for="trackingnumber">Tracking Number</label>
+        <input type="text" id="trackingnumber" name="trackingnumber" disabled>
+
+        <label for="shipmentOwner">Shipment Owner</label>
+        <input type="text" id="shipmentOwner" name="shipmentOwner" required>
+
+        <label for="senderName">Sender Name</label>
+        <input type="text" id="senderName" name="senderName" required>
+
+        <label for="sendFrom">Send From</label>
+        <input type="text" id="sendFrom" name="sendFrom" required>
+
+        <label for="destination">Destination</label>
+        <input type="text" id="destination" name="destination" required>
+
+        <label for="status">Status</label>
+        <select id="status" name="status">
+            <option value="On route">On route</option>
+            <option value="Delivered">Delivered</option>
+            <option value="On hold">On hold</option>
+            <option value="Seized">Seized</option>
+        </select>
+
+        <button type="submit">Update Shipment</button>
+    </form>
+
+    <script src="edit.js"></script> <!-- Link to the JavaScript file -->
+</body>
+</html>
