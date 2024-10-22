@@ -54,7 +54,7 @@ h1 {
 main {
     padding: 20px 0;
     text-align: center;
-    color: white; /* Change text color to white for visibility */
+    color: blue; /* Change text color to white for visibility */
 }
 
 form {
@@ -64,7 +64,7 @@ form {
 form input[type="text"] {
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid blue;
     border-radius: 5px;
     width: 300px;
 }
