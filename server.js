@@ -1,27 +1,15 @@
 require('dotenv').config();
-const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const shipmentController = require('./controllers/shipmentController'); 
 const shipmentRoutes = require('./routes/shipmentRoutes'); // Adjust to your file structure
-const cors = require('cors');
+const { createClient } = require('@supabase/supabase-js'); // Ensure this is correctly imported
+
 // Initialize Supabase with your environment variables
 const supabaseUrl = process.env.SUPABASE_URL || 'your-supabase-url';
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'your-anon-key';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// Enable CORS for all routes (you can restrict it to certain domains)
-app.use(cors());
-
-// Restrict CORS to specific domain (e.g., your frontend domain on Vercel)
-app.use(cors({
-  origin: 'https://shipment-fedex.vercel.app'
-}));
-
-// Import the Supabase client
-const { createClient } = require('@supabase/supabase-js');
-
-
 
 if (!supabaseUrl || !supabaseAnonKey) {
     console.error('Supabase URL or Anon Key is missing. Check your environment variables.');
@@ -31,38 +19,57 @@ if (!supabaseUrl || !supabaseAnonKey) {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Use CORS and restrict it to specific domain (your frontend domain on Vercel)
+app.use(cors({
+  origin: 'https://shipment-fedex.vercel.app'
+}));
+
 app.use(bodyParser.json());
-
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.static('public'));
 
-// Ignore any requests for .map files
-app.get('*.map', (req, res) => {
-    res.status(204).send(); // Send "No Content" response for .map files
-});
-
-
-app.get('/api/shipments/:trackingnumber', async (req, res) => {
-    const { trackingnumber } = req.params;      // Your logic here to fetch the shipment details
-});
-
-app.use('/api/shipments', shipmentController); 
-app.get('/track/:trackingnumber', (req, res) => {
-    const trackingnumber = req.params.trackingnumber; // Retrieve trackingnumber from request
-    res.send(`Tracking Number: ${trackingnumber}`); // Respond with the tracking number
-});
+// Log all incoming requests
 app.use((req, res, next) => {
     console.log('Incoming request:', req.method, req.url);
     next();
 });
 
+// Ignore requests for .map files (optional)
+app.get('*.map', (req, res) => {
+    res.status(204).send(); // Send "No Content" response for .map files
+});
 
-// Use the shipment routes
-app.use(shipmentRoutes);
+// Define your routes
+app.use('/api/shipments', shipmentRoutes); // This handles all your shipment-related routes
 
-app.use('/api/shipments', shipmentRoutes);  
+// Example route for handling tracking
+app.get('/track/:trackingnumber', (req, res) => {
+    const trackingnumber = req.params.trackingnumber; 
+    res.send(`Tracking Number: ${trackingnumber}`); 
+});
 
+// Implement the GET route for fetching shipment details by tracking number
+app.get('/api/shipments/:trackingnumber', async (req, res) => {
+    const { trackingnumber } = req.params;
+
+    try {
+        // Replace with logic to fetch the shipment details from Supabase or your DB
+        const { data, error } = await supabase
+            .from('Shipments')
+            .select('*')
+            .eq('trackingnumber', trackingnumber)
+            .single();
+
+        if (error) {
+            return res.status(404).json({ success: false, message: 'Shipment not found' });
+        }
+
+        res.status(200).json({ success: true, shipment: data });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Error fetching shipment details' });
+    }
+});
 
 // Start the server
 app.listen(PORT, '0.0.0.0', function() {
