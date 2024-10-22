@@ -1,21 +1,60 @@
-import { supabase } from '@supabase/supabase-js'; // Adjust path as necessary
+// addShipment.js (or updateShipment.js)
+const { createClient } = require('@supabase/supabase-js');
 
-export default async function handler(req, res) {
-  if (req.method === 'PUT') {
-    const { trackingnumber, ...updateData } = req.body;
+const supabase = createClient('YOUR_SUPABASE_URL', 'YOUR_SUPABASE_KEY');
 
-    // Perform the update operation
-    const { data, error } = await supabase
-      .from('shipments')
-      .update(updateData)
-      .match({ trackingnumber });
+async function handler(req, res) {
+  if (req.method === 'PUT') { // Use PUT for updates
+    const {
+      trackingnumber,
+      shipmentOwner,
+      senderName,
+      sendFrom,
+      destination,
+      status,
+      weight,
+      shippingPrice,
+      receiverName,
+      receiverAddress,
+      methodOfShipping,
+      pickupAirport,
+      timeGoodsLeftCompany
+    } = req.body;
 
-    if (error) {
-      return res.status(400).json({ success: false, message: error.message });
+    // Check if trackingnumber is provided
+    if (!trackingnumber) {
+      return res.status(400).json({ message: 'Tracking number is required.' });
     }
 
-    return res.status(200).json({ success: true, data });
+    // Update the shipment details
+    const { data, error } = await supabase
+      .from('shipments')
+      .update({
+        shipmentOwner,
+        senderName,
+        sendFrom,
+        destination,
+        status,
+        weight,
+        shippingPrice,
+        receiverName,
+        receiverAddress,
+        methodOfShipping,
+        pickupAirport,
+        timeGoodsLeftCompany
+      })
+      .eq('trackingnumber', trackingnumber); // Match the existing tracking number
+
+    if (error) {
+      return res.status(400).json({ message: error.message });
+    }
+
+    res.status(200).json({ success: true, data });
   } else {
-    return res.status(405).json({ success: false, message: 'Method not allowed' });
+    // Handle other methods (GET, POST, etc.)
+    res.setHeader('Allow', ['PUT']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+
+export default handler;

@@ -104,8 +104,8 @@ function fetchShipments() {
     }
   });
   
-  // Modify the existing event listener to handle updates
-  document.getElementById('addShipmentForm').addEventListener('submit', function (e) {
+  // Admin.js - Modify the event listener for editing
+document.getElementById('addShipmentForm').addEventListener('submit', function (e) {
     e.preventDefault();
   
     const shipmentData = {
@@ -124,14 +124,12 @@ function fetchShipments() {
       timeGoodsLeftCompany: document.getElementById('timeGoodsLeftCompany').value || null
     };
   
-    // Determine if this is an add or update operation
-    const isUpdate = shipmentData.trackingnumber ? true : false;
+    // Check if we are editing or adding a new shipment
+    const isEditing = shipmentData.trackingnumber; // Ensure you're editing
   
-    // Use the correct endpoint for add or update
-    const url = isUpdate ? `/api/shipments/updateShipment` : `/api/shipments/addShipment`;
-  
-    fetch(url, {
-      method: isUpdate ? 'PUT' : 'POST', // Use PUT for updates
+    // Send PUT request to the API endpoint
+    fetch('/api/shipments/addShipment', {
+      method: isEditing ? 'PUT' : 'POST', // Use PUT for updates
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(shipmentData),
     })
@@ -143,17 +141,15 @@ function fetchShipments() {
       })
       .then(data => {
         if (data.success) {
-          alert('Shipment added/updated successfully!');
+          alert('Shipment updated successfully!');
           document.getElementById('addShipmentForm').reset();
-          // Call fetchShipments again to refresh the list
-          fetchShipments();
         } else {
           alert('Error: ' + (data.message || 'Unknown error occurred'));
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while adding/updating the shipment.');
+        alert('An error occurred while updating the shipment.');
       });
   });
   
