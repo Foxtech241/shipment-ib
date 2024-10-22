@@ -21,7 +21,9 @@ const PORT = process.env.PORT || 3000;
 
 // Use CORS and restrict it to specific domain (your frontend domain on Vercel)
 app.use(cors({
-  origin: 'https://shipment-fedex.vercel.app'
+  origin: 'https://shipment-fedex.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type']
 }));
 
 app.use(bodyParser.json());
