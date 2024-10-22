@@ -7,8 +7,8 @@ const shipmentRoutes = require('./routes/shipmentRoutes'); // Adjust to your fil
 const { createClient } = require('@supabase/supabase-js'); // Ensure this is correctly imported
 
 // Initialize Supabase with your environment variables
-const supabaseUrl = process.env.SUPABASE_URL || 'your-supabase-url';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'your-anon-key';
+const supabaseUrl = process.env.SUPABASE_URL || 'https://xmufpczjbjhxfdhnbjyk.supabase.co';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtdWZwY3pqYmpoeGZkaG5ianlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkwMjcyMzEsImV4cCI6MjA0NDYwMzIzMX0.Hv1UE_r7LaL4MGgNYQYLEFmAWOSxMHtPc0zpzjpD1BQ';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 if (!supabaseUrl || !supabaseAnonKey) {
