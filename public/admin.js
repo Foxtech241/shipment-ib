@@ -21,13 +21,11 @@ document.getElementById('addShipmentForm').addEventListener('submit', function(e
     console.log(shipmentData); // Check if the data is properly collected
   
     // Send POST request to the server
-    fetch('/api/shipments', {
+    fetch('https://your-api-domain.com/api/shipments', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(shipmentData),
-    })
+    })    
     .then(response => response.json())
     .then(data => {
       if (data.success) {
