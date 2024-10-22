@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Fetch and display existing shipments
 function fetchShipments() {
-    fetch('/api/shipments') // Adjust this endpoint to match your API
+    fetch('/api/shipments') // Ensure this endpoint matches your API
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -12,9 +12,14 @@ function fetchShipments() {
             return response.json();
         })
         .then(data => {
+            if (data.length === 0) {
+                console.log('No shipments found.');
+                return;
+            }
             const tbody = document.getElementById('shipments-list').getElementsByTagName('tbody')[0];
-            tbody.innerHTML = ''; // Clear existing entries
+            tbody.innerHTML = ''; // Clear any existing rows
 
+            // Iterate through shipments and create table rows
             data.forEach(shipment => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
@@ -34,14 +39,14 @@ function fetchShipments() {
         .catch(error => console.error('Error fetching shipments:', error));
 }
 
-// Edit shipment
+// Edit shipment button functionality
 document.addEventListener('click', function (e) {
     if (e.target.classList.contains('edit-button')) {
         const trackingnumber = e.target.getAttribute('data-trackingnumber');
         window.location.href = `/edit.html?trackingnumber=${trackingnumber}`; // Redirect to edit page
     }
 
-    // Delete shipment
+    // Delete shipment button functionality
     if (e.target.classList.contains('delete-button')) {
         const trackingnumber = e.target.getAttribute('data-trackingnumber');
         if (confirm(`Are you sure you want to delete the shipment with tracking number ${trackingnumber}?`)) {
