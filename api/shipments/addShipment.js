@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client (replace with your actual Supabase URL and API key)
-const supabase = createClient('https://xmufpczjbjhxfdhnbjyk.supabase.co', 'your-supabase-api-key');
+const supabase = createClient('https://xmufpczjbjhxfdhnbjyk.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtdWZwY3pqYmpoeGZkaG5ianlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkwMjcyMzEsImV4cCI6MjA0NDYwMzIzMX0.Hv1UE_r7LaL4MGgNYQYLEFmAWOSxMHtPc0zpzjpD1BQ');
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
