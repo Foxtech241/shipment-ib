@@ -21,7 +21,7 @@ document.getElementById('addShipmentForm').addEventListener('submit', function (
   console.log(shipmentData); // Check if the data is properly collected
 
   // Send POST request to the server
-  fetch('https://shipment-fedex.vercel.app/api/shipments', {
+  fetch(`/api/shipments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(shipmentData),
