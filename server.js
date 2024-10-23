@@ -18,6 +18,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const shipmentRoutes = require('./routes/shipmentRoutes'); // Adjust the path if necessary
+app.use('/api/shipments', shipmentRoutes);
+
 
 // Use CORS and restrict it to specific domain (your frontend domain on Vercel)
 app.use(cors({

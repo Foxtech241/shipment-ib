@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Fetch and display existing shipments
 function fetchShipments() {
-    fetch('/api/shipments') // Ensure this endpoint matches your API
+    fetch('/api/shipments/apilist') // Adjusted to use the new API endpoint
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -38,29 +38,3 @@ function fetchShipments() {
         })
         .catch(error => console.error('Error fetching shipments:', error));
 }
-
-// Edit shipment button functionality
-document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('edit-button')) {
-        const trackingnumber = e.target.getAttribute('data-trackingnumber');
-        window.location.href = `/edit.html?trackingnumber=${trackingnumber}`; // Redirect to edit page
-    }
-
-    // Delete shipment button functionality
-    if (e.target.classList.contains('delete-button')) {
-        const trackingnumber = e.target.getAttribute('data-trackingnumber');
-        if (confirm(`Are you sure you want to delete the shipment with tracking number ${trackingnumber}?`)) {
-            fetch(`/api/shipments/${trackingnumber}`, {
-                method: 'DELETE',
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                alert('Shipment deleted successfully!');
-                fetchShipments(); // Refresh the list
-            })
-            .catch(error => console.error('Error deleting shipment:', error));
-        }
-    }
-});
