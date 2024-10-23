@@ -12,21 +12,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Load shipment details into form
 function loadShipmentDetails(trackingnumber) {
     fetch(`/api/shipments/${trackingnumber}`)
         .then(response => response.json())
         .then(shipment => {
-            document.getElementById('shipmentOwner').value = shipment.shipmentOwner;
-            document.getElementById('senderName').value = shipment.senderName;
-            document.getElementById('sendFrom').value = shipment.sendFrom;
-            document.getElementById('destination').value = shipment.destination;
-            document.getElementById('status').value = shipment.status;
+            if (shipment) {
+                document.getElementById('shipmentOwner').value = shipment.shipmentOwner;
+                document.getElementById('senderName').value = shipment.senderName;
+                document.getElementById('sendFrom').value = shipment.sendFrom;
+                document.getElementById('destination').value = shipment.destination;
+                document.getElementById('status').value = shipment.status;
+            } else {
+                alert('Shipment not found');
+            }
         })
         .catch(error => console.error('Error loading shipment details:', error));
 }
 
-// Update shipment data
 function updateShipment(trackingnumber) {
     const shipmentOwner = document.getElementById('shipmentOwner').value;
     const senderName = document.getElementById('senderName').value;
@@ -34,12 +36,13 @@ function updateShipment(trackingnumber) {
     const destination = document.getElementById('destination').value;
     const status = document.getElementById('status').value;
 
-    fetch(`/api/shipments/apiedit?trackingnumber=${trackingnumber}`, {
+    fetch(`/api/shipments/apiedit`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+            trackingnumber,
             shipmentOwner,
             senderName,
             sendFrom,
@@ -55,7 +58,7 @@ function updateShipment(trackingnumber) {
     })
     .then(data => {
         alert('Shipment updated successfully!');
-        window.location.href = '/list.html'; // Redirect back to list page
+        window.location.href = '/list.html'; // Redirect back to the list page
     })
     .catch(error => console.error('Error updating shipment:', error));
 }

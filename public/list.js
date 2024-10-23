@@ -2,9 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchShipments();
 });
 
-// Fetch and display existing shipments
 function fetchShipments() {
-    fetch('/api/shipments/apilist') // Adjusted to use the new API endpoint
+    fetch('/api/shipments/apilist')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -19,7 +18,6 @@ function fetchShipments() {
             const tbody = document.getElementById('shipments-list').getElementsByTagName('tbody')[0];
             tbody.innerHTML = ''; // Clear any existing rows
 
-            // Iterate through shipments and create table rows
             data.forEach(shipment => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
@@ -35,6 +33,16 @@ function fetchShipments() {
                     </td>
                 `;
             });
+
+            // Add event listeners for the edit buttons
+            const editButtons = document.querySelectorAll('.edit-button');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const trackingnumber = button.getAttribute('data-trackingnumber');
+                    window.location.href = `/edit.html?trackingnumber=${trackingnumber}`; // Redirect to edit page
+                });
+            });
+
         })
         .catch(error => console.error('Error fetching shipments:', error));
 }
