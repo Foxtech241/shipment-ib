@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const trackingnumber = urlParams.get('trackingnumber');
+
     if (trackingnumber) {
         loadShipmentDetails(trackingnumber);
     }
@@ -8,23 +9,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('edit-shipment-form');
     form.addEventListener('submit', function (e) {
         e.preventDefault();
-        updateShipment(trackingnumber);
+        updateShipment(trackingnumber); // Pass trackingnumber
     });
 });
 
+// Load shipment details into the form
 function loadShipmentDetails(trackingnumber) {
     fetch(`/api/shipments/${trackingnumber}`)
         .then(response => response.json())
         .then(shipment => {
-            if (shipment) {
-                document.getElementById('shipmentOwner').value = shipment.shipmentOwner;
-                document.getElementById('senderName').value = shipment.senderName;
-                document.getElementById('sendFrom').value = shipment.sendFrom;
-                document.getElementById('destination').value = shipment.destination;
-                document.getElementById('status').value = shipment.status;
-            } else {
-                alert('Shipment not found');
-            }
+            // Store the shipment ID from the fetched shipment
+            shipmentId = shipment.id; // Ensure this line is correct
+
+            document.getElementById('shipmentOwner').value = shipment.shipmentOwner;
+            document.getElementById('senderName').value = shipment.senderName;
+            document.getElementById('sendFrom').value = shipment.sendFrom;
+            document.getElementById('destination').value = shipment.destination;
+            document.getElementById('status').value = shipment.status;
         })
         .catch(error => console.error('Error loading shipment details:', error));
 }
@@ -39,7 +40,7 @@ function updateShipment(trackingnumber) {
 
     // Log the details before sending the request
     console.log({
-        id: shipmentId,
+        id: shipmentId, // Use the correct shipment ID here
         trackingnumber,
         shipmentOwner,
         senderName,
@@ -54,7 +55,7 @@ function updateShipment(trackingnumber) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            id: shipmentId, // Include the ID
+            id: shipmentId, // Include the shipment ID
             trackingnumber,
             shipmentOwner,
             senderName,
