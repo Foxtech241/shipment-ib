@@ -1,44 +1,32 @@
-const { supabase } = require('../../utils/supabaseClient');
+import { createClient } from '@supabase/supabase-js';
 
-// API endpoint to update shipment details
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 export default async function handler(req, res) {
-    if (req.method === 'PUT') {
-        const { trackingnumber } = req.query; // Retrieve tracking number from query params
-        const {
-            shipmentOwner,
-            senderName,
-            sendFrom,
-            destination,
-            status,
-            ...otherFields
-        } = req.body;
+  if (req.method === 'PUT') {
+    const { id, trackingnumber, deliverytime, deliverystatus, ...otherFields } = req.body;
 
-        try {
-            // Update shipment in Supabase using tracking number
-            const { data, error } = await supabase
-                .from('shipments')
-                .update({
-                    shipmentOwner,
-                    senderName,
-                    sendFrom,
-                    destination,
-                    status,
-                    ...otherFields,
-                })
-                .eq('trackingnumber', trackingnumber); // Update where trackingnumber matches
+    try {
+      // Update shipment by ID
+      const { data, error } = await supabase
+        .from('shipments')
+        .update({
+          trackingnumber,
+          deliverytime,
+          deliverystatus,
+          ...otherFields
+        })
+        .eq('id', id);
 
-            if (error) {
-                throw error;
-            }
+      if (error) throw error;
 
-            // Return success response
-            res.status(200).json(data);
-        } catch (error) {
-            console.error('Error updating shipment:', error.message);
-            res.status(500).json({ message: 'Error updating shipment', error: error.message });
-        }
-    } else {
-        // Handle non-PUT requests
-        res.status(405).json({ message: 'Method Not Allowed' });
+      res.status(200).json({ message: 'Shipment updated successfully', data });
+    } catch (error) {
+      res.status(500).json({ error: 'Error updating shipment', details: error.message });
     }
+  } else {
+    res.status(405).json({ error: 'Method not allowed' });
+  }
 }
