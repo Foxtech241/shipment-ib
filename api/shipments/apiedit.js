@@ -7,6 +7,9 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export default async function handler(req, res) {
   if (req.method === 'PUT') {
     const { id, trackingnumber, deliverytime, deliverystatus, ...otherFields } = req.body;
+     // Log the incoming request body
+     console.log(req.body);
+
 
     try {
       // Update shipment by ID
