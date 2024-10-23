@@ -29,6 +29,7 @@ function loadShipmentDetails(trackingnumber) {
         .catch(error => console.error('Error loading shipment details:', error));
 }
 
+// Update shipment data
 function updateShipment(trackingnumber) {
     const shipmentOwner = document.getElementById('shipmentOwner').value;
     const senderName = document.getElementById('senderName').value;
@@ -36,12 +37,24 @@ function updateShipment(trackingnumber) {
     const destination = document.getElementById('destination').value;
     const status = document.getElementById('status').value;
 
+    // Log the details before sending the request
+    console.log({
+        id: shipmentId,
+        trackingnumber,
+        shipmentOwner,
+        senderName,
+        sendFrom,
+        destination,
+        status,
+    });
+
     fetch(`/api/shipments/apiedit`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+            id: shipmentId, // Include the ID
             trackingnumber,
             shipmentOwner,
             senderName,
