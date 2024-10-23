@@ -1,4 +1,5 @@
-const { supabase } = require('../../utils/supabaseClient');
+const { createClient } = require('@supabase/supabase-js');
+const supabase = createClient('https://xmufpczjbjhxfdhnbjyk.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtdWZwY3pqYmpoeGZkaG5ianlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkwMjcyMzEsImV4cCI6MjA0NDYwMzIzMX0.Hv1UE_r7LaL4MGgNYQYLEFmAWOSxMHtPc0zpzjpD1BQ');
 
 // API endpoint to fetch all shipments
 export default async function handler(req, res) {
