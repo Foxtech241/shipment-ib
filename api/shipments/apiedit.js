@@ -9,10 +9,7 @@ export default async function handler(req, res) {
     const { id, trackingnumber, deliverytime, deliverystatus, ...otherFields } = req.body;
 
     try {
-      // Log the request for debugging
       console.log("PUT request body:", req.body);
-
-      // Update shipment by ID
       const { data, error } = await supabase
         .from('shipments')
         .update({
@@ -29,12 +26,12 @@ export default async function handler(req, res) {
     } catch (error) {
       res.status(500).json({ error: 'Error updating shipment', details: error.message });
     }
-  } else if (req.method === 'DELETE') {
-    const { trackingnumber } = req.query;
+  } 
+  else if (req.method === 'DELETE') {
+    const trackingnumber = req.query.trackingnumber || req.body.trackingnumber; // Check both query and body
 
     try {
       console.log("DELETE request tracking number:", trackingnumber);
-
       const { data, error } = await supabase
         .from('shipments')
         .delete()
@@ -46,7 +43,8 @@ export default async function handler(req, res) {
     } catch (error) {
       res.status(500).json({ error: 'Error deleting shipment', details: error.message });
     }
-  } else {
+  } 
+  else {
     res.status(405).json({ error: 'Method not allowed' });
   }
 }

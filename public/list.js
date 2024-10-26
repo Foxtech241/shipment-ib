@@ -51,7 +51,26 @@ function fetchShipments() {
                     deleteShipment(trackingnumber); // Call delete function
                 });
             });
-
         })
         .catch(error => console.error('Error fetching shipments:', error));
+}
+
+function deleteShipment(trackingnumber) {
+    fetch(`/api/shipments/apiedit?trackingnumber=${trackingnumber}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert('Shipment deleted successfully!');
+        fetchShipments(); // Refresh the list after deletion
+    })
+    .catch(error => console.error('Error deleting shipment:', error));
 }
