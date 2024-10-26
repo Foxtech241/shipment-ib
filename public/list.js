@@ -43,27 +43,15 @@ function fetchShipments() {
                 });
             });
 
+            // Add event listeners for delete buttons
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const trackingnumber = button.getAttribute('data-trackingnumber');
+                    deleteShipment(trackingnumber); // Call delete function
+                });
+            });
+
         })
         .catch(error => console.error('Error fetching shipments:', error));
 }
-
-// Delete a shipment
-function deleteShipment(trackingnumber) {
-    if (confirm('Are you sure you want to delete this shipment?')) {
-        fetch(`/api/shipments/${trackingnumber}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert('Shipment deleted successfully');
-            // Remove the deleted shipment from the list without refreshing
-            fetchShipments();
-        })
-        .catch(error => console.error('Error deleting shipment:', error));
-    }
-} 
