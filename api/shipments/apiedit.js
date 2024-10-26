@@ -7,11 +7,11 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export default async function handler(req, res) {
   if (req.method === 'PUT') {
     const { id, trackingnumber, deliverytime, deliverystatus, ...otherFields } = req.body;
-     // Log the incoming request body
-     console.log(req.body);
-
 
     try {
+      // Log the request for debugging
+      console.log("PUT request body:", req.body);
+
       // Update shipment by ID
       const { data, error } = await supabase
         .from('shipments')
@@ -29,28 +29,24 @@ export default async function handler(req, res) {
     } catch (error) {
       res.status(500).json({ error: 'Error updating shipment', details: error.message });
     }
+  } else if (req.method === 'DELETE') {
+    const { trackingnumber } = req.query;
+
+    try {
+      console.log("DELETE request tracking number:", trackingnumber);
+
+      const { data, error } = await supabase
+        .from('shipments')
+        .delete()
+        .eq('trackingnumber', trackingnumber);
+
+      if (error) throw error;
+
+      res.status(200).json({ message: 'Shipment deleted successfully', data });
+    } catch (error) {
+      res.status(500).json({ error: 'Error deleting shipment', details: error.message });
+    }
   } else {
     res.status(405).json({ error: 'Method not allowed' });
-  }
-}
-
-export default async function handler(req, res) {
-  if (req.method === 'DELETE') {
-      const { trackingnumber } = req.query;
-
-      try {
-          const { data, error } = await supabase
-              .from('shipments')
-              .delete()
-              .eq('trackingnumber', trackingnumber);
-
-          if (error) throw error;
-
-          res.status(200).json({ message: 'Shipment deleted successfully', data });
-      } catch (error) {
-          res.status(500).json({ error: 'Error deleting shipment', details: error.message });
-      }
-  } else {
-      res.status(405).json({ error: 'Method not allowed' });
   }
 }
