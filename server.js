@@ -2,27 +2,30 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const shipmentController = require('./controllers/shipmentController'); 
-const shipmentRoutes = require('./routes/shipmentRoutes'); // Adjust to your file structure
-const { createClient } = require('@supabase/supabase-js'); // Ensure this is correctly imported
-
-// Initialize Supabase with your environment variables
-const supabaseUrl = process.env.SUPABASE_URL || 'https://xmufpczjbjhxfdhnbjyk.supabase.co';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtdWZwY3pqYmpoeGZkaG5ianlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkwMjcyMzEsImV4cCI6MjA0NDYwMzIzMX0.Hv1UE_r7LaL4MGgNYQYLEFmAWOSxMHtPc0zpzjpD1BQ';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('Supabase URL or Anon Key is missing. Check your environment variables.');
-    process.exit(1); // Terminate if missing keys
-}
+const { Pool } = require('pg'); // PostgreSQL client
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const shipmentRoutes = require('./routes/shipmentRoutes'); // Adjust the path if necessary
-app.use('/api/shipments', shipmentRoutes);
 
+// Set up PostgreSQL connection using environment variables for Aiven
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL, // Aiven PostgreSQL connection string
+    ssl: { rejectUnauthorized: false } // SSL setting for Aiven PostgreSQL
+});
 
-// Use CORS and restrict it to specific domain (your frontend domain on Vercel)
+// Verify database connection
+pool.connect((err) => {
+    if (err) {
+        console.error('Database connection error:', err.stack);
+    } else {
+        console.log('Connected to Aiven PostgreSQL database');
+    }
+});
+
+// Import shipment routes (ensure the path matches your project structure)
+const shipmentRoutes = require('./routes/shipmentRoutes'); 
+
+// Use CORS and restrict to specific domain (your frontend domain on Vercel)
 app.use(cors({
   origin: 'https://shipment-fedex.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -44,8 +47,8 @@ app.get('*.map', (req, res) => {
     res.status(204).send(); // Send "No Content" response for .map files
 });
 
-// Define your routes
-app.use('/api/shipments', shipmentRoutes); // This handles all your shipment-related routes
+// Define shipment-related routes
+app.use('/api/shipments', shipmentRoutes);
 
 // Example route for handling tracking
 app.get('/track/:trackingnumber', (req, res) => {
@@ -53,25 +56,21 @@ app.get('/track/:trackingnumber', (req, res) => {
     res.send(`Tracking Number: ${trackingnumber}`); 
 });
 
-// Implement the GET route for fetching shipment details by tracking number
+// Implement GET route for fetching shipment details by tracking number
 app.get('/api/shipments/:trackingnumber', async (req, res) => {
     const { trackingnumber } = req.params;
 
     try {
-        // Replace with logic to fetch the shipment details from Supabase or your DB
-        const { data, error } = await supabase
-            .from('Shipments')
-            .select('*')
-            .eq('trackingnumber', trackingnumber)
-            .single();
+        // Query the PostgreSQL database for shipment details
+        const result = await pool.query('SELECT * FROM Shipments WHERE trackingnumber = $1', [trackingnumber]);
 
-        if (error) {
+        if (result.rows.length === 0) {
             return res.status(404).json({ success: false, message: 'Shipment not found' });
         }
 
-        res.status(200).json({ success: true, shipment: data });
+        res.status(200).json({ success: true, shipment: result.rows[0] });
     } catch (err) {
-        console.error(err);
+        console.error('Error fetching shipment details:', err);
         res.status(500).json({ success: false, message: 'Error fetching shipment details' });
     }
 });

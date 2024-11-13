@@ -1,70 +1,84 @@
-import { createClient } from '@supabase/supabase-js';
+import { Pool } from 'pg';
 
-// Initialize Supabase client with your URL and public anon key
-const supabaseUrl = 'https://xmufpczjbjhxfdhnbjyk.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtdWZwY3pqYmpoeGZkaG5ianlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkwMjcyMzEsImV4cCI6MjA0NDYwMzIzMX0.Hv1UE_r7LaL4MGgNYQYLEFmAWOSxMHtPc0zpzjpD1BQ';
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Initialize PostgreSQL client with Aiven connection string
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL, // Your Aiven PostgreSQL connection URL
+  ssl: { rejectUnauthorized: false }
+});
 
 export default async function handler(req, res) {
-    if (req.method === 'POST') {
-        try {
-            console.log('Request body received:', req.body);
-            const {
-                trackingnumber,
-                shipmentOwner,
-                senderName,
-                sendFrom,
-                destination,
-                status,
-                weight,
-                shippingPrice,
-                receiverName,
-                receiverAddress,
-                methodOfShipping,
-                pickupAirport,
-                timeGoodsLeftCompany
-            } = req.body;
+  if (req.method === 'POST') {
+    try {
+      console.log('Request body received:', req.body);
+      const {
+        trackingnumber,
+        shipmentOwner,
+        senderName,
+        sendFrom,
+        destination,
+        status,
+        weight,
+        shippingPrice,
+        receiverName,
+        receiverAddress,
+        methodOfShipping,
+        pickupAirport,
+        timeGoodsLeftCompany
+      } = req.body;
 
-            // Check for required fields
-            if (!trackingnumber || !shipmentOwner || !senderName || !sendFrom || !destination || !status) {
-                console.error('Missing required fields:', req.body);
-                return res.status(400).json({ success: false, message: 'Missing required fields' });
-            }
+      // Check for required fields
+      if (!trackingnumber || !shipmentOwner || !senderName || !sendFrom || !destination || !status) {
+        console.error('Missing required fields:', req.body);
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
+      }
 
-            // Try to insert the shipment data into Supabase
-            const { data, error } = await supabase
-                .from('shipments')
-                .insert([{
-                    trackingnumber,
-                    shipmentOwner,
-                    senderName,
-                    sendFrom,
-                    destination,
-                    status,
-                    weight,
-                    shippingPrice,
-                    receiverName,
-                    receiverAddress,
-                    methodOfShipping,
-                    pickupAirport,
-                    timeGoodsLeftCompany
-                }]);
+      // Insert the shipment data into PostgreSQL database
+      const query = `
+        INSERT INTO shipments (
+          trackingnumber,
+          shipmentOwner,
+          senderName,
+          sendFrom,
+          destination,
+          status,
+          weight,
+          shippingPrice,
+          receiverName,
+          receiverAddress,
+          methodOfShipping,
+          pickupAirport,
+          timeGoodsLeftCompany
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        RETURNING *;
+      `;
+      const values = [
+        trackingnumber,
+        shipmentOwner,
+        senderName,
+        sendFrom,
+        destination,
+        status,
+        weight,
+        shippingPrice,
+        receiverName,
+        receiverAddress,
+        methodOfShipping,
+        pickupAirport,
+        timeGoodsLeftCompany
+      ];
 
-            if (error) {
-                console.error('Supabase insert error:', error);
-                return res.status(500).json({ success: false, message: 'Database error' });
-            }
+      const result = await pool.query(query, values);
 
-            // Successfully added the shipment
-            res.status(201).json({ success: true, data });
-        } catch (err) {
-            // Catch any other errors and return a 500 status
-            console.error('Server-side error:', err);
-            res.status(500).json({ success: false, message: 'Internal Server Error' });
-        }
-    } else {
-        // Only allow POST method
-        res.setHeader('Allow', ['POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+      // Successfully added the shipment
+      res.status(201).json({ success: true, data: result.rows[0] });
+    } catch (err) {
+      // Catch any errors and return a 500 status
+      console.error('Database insert error:', err);
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
+  } else {
+    // Only allow POST method
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 }
